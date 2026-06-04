@@ -5,7 +5,7 @@ export const LANGS: { id: Lang; label: string }[] = [
   { id: "en", label: "English" },
 ];
 
-const LANG_KEY = "markview.lang";
+const LANG_KEY = "padora.lang";
 
 // Resolve the initial language: persisted choice first, then the browser
 // locale, falling back to Chinese.
@@ -224,7 +224,7 @@ export const STRINGS: Record<Lang, Strings> = { zh, en };
 
 export function welcomeDoc(lang: Lang): string {
   if (lang === "en") {
-    return `# Welcome to MarkView
+    return `# Welcome to Padora
 
 A **Typora**-like Markdown reader and editor, built with **Tauri + React**.
 
@@ -277,7 +277,7 @@ $$
 > Tip: save the document before dragging images so they land in the \`assets/\` folder next to it.
 `;
   }
-  return `# 欢迎使用 MarkView
+  return `# 欢迎使用 Padora
 
 一个仿 **Typora** 的 Markdown 阅读器与编辑器，基于 **Tauri + React** 构建。
 

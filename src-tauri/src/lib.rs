@@ -430,7 +430,7 @@ fn build_app_menu(
     let t = menu_labels(lang);
 
     // macOS application menu (about / hide / quit).
-    let app_menu = SubmenuBuilder::new(handle, "MarkView")
+    let app_menu = SubmenuBuilder::new(handle, "Padora")
         .about(None)
         .separator()
         .services()

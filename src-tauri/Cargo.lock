@@ -3437,7 +3437,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tauri-demo"
+name = "padora"
 version = "0.1.0"
 dependencies = [
  "serde",

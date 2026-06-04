@@ -141,7 +141,7 @@ function Icon({ name, size = 17 }: { name: keyof typeof ICON_PATHS | string; siz
 }
 
 // Lightweight persisted-settings helpers (localStorage).
-const PREF_KEY = "markview.prefs";
+const PREF_KEY = "padora.prefs";
 function loadPrefs(): Record<string, any> {
   try {
     return JSON.parse(localStorage.getItem(PREF_KEY) || "{}");
