@@ -120,27 +120,35 @@ Output: `src-tauri/target/release/bundle/`.
 
 ## Release
 
-GitHub Actions (`.github/workflows/release.yml`) builds and uploads installers when you push a version tag.
+GitHub Actions (`.github/workflows/release.yml`) builds and uploads installers. **The release version** comes from one of two sources:
+
+| Trigger | Where the version comes from |
+| --- | --- |
+| **Push tag** `v0.2.0` | Parsed from the tag → builds **0.2.0**, creates Release **v0.2.0** |
+| **Manual run** (Actions → Release → Run workflow) | You type the version in **Release version** (e.g. `0.2.0`, no `v` prefix) |
+
+Before either method, bump `version` in `src-tauri/tauri.conf.json` and `package.json` on `main` and commit (keeps the repo in sync). CI also writes that version into the build artifacts for the release.
 
 **One-time repo setting:**
 
 > **Settings → Actions → General → Workflow permissions → Read and write permissions**
 
-**Steps:**
+### Option A — Push a tag (recommended)
 
-1. Bump `version` in `src-tauri/tauri.conf.json` and `package.json`
-2. Commit and push to `main`
-3. Tag and push:
+```bash
+# 1. Bump version in tauri.conf.json + package.json, commit, push main
+git tag v0.2.0
+git push origin v0.2.0
+```
 
-   ```bash
-   git tag v0.1.0
-   git push origin v0.1.0
-   ```
+### Option B — Manual workflow
 
-4. Wait for the [Actions](https://github.com/xichenx/Padora/actions) workflow
-5. Open the draft on [Releases](https://github.com/xichenx/Padora/releases), verify assets, click **Publish release**
+1. Open [Actions → Release](https://github.com/xichenx/Padora/actions/workflows/release.yml)
+2. Click **Run workflow**
+3. Enter **Release version**, e.g. `0.2.0`
+4. Run
 
-You can also trigger **Release** manually via `workflow_dispatch` on the Actions tab.
+Then open the draft on [Releases](https://github.com/xichenx/Padora/releases), verify assets, and click **Publish release**.
 
 ## Feedback
 

@@ -1,12 +1,9 @@
 # Build Padora for Windows / macOS / Linux and publish installable artifacts
 # to a GitHub Release.
 #
-# How to release:
-#   1. Bump version in src-tauri/tauri.conf.json (and package.json).
-#   2. Commit and push to main.
-#   3. Create and push a tag, e.g.  git tag v0.1.0 && git push origin v0.1.0
-#      — or run this workflow manually from the Actions tab (workflow_dispatch).
-#   4. Open the draft Release on GitHub, verify assets, then click "Publish release".
+# Version is determined as follows:
+#   • Push tag v*     → version from the tag (e.g. v0.2.0 → 0.2.0)
+#   • Manual run      → version from the "Release version" input field
 #
 # Repo settings (required once):
 #   Settings → Actions → General → Workflow permissions → Read and write permissions
@@ -15,12 +12,47 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (semver, without v prefix, e.g. 0.2.0)"
+        required: true
+        type: string
   push:
     tags:
       - "v*"
 
 jobs:
+  resolve-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set.outputs.version }}
+      tag: ${{ steps.set.outputs.tag }}
+    steps:
+      - name: Resolve release version
+        id: set
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            # refs/tags/v0.2.0 → 0.2.0
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          fi
+
+          # Trim whitespace and strip a leading "v" if present.
+          VERSION="$(echo "$VERSION" | tr -d '[:space:]')"
+          VERSION="${VERSION#v}"
+
+          if ! echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$'; then
+            echo "::error::Invalid version: $VERSION (expected semver like 0.2.0)"
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Release version: $VERSION (tag: v$VERSION)"
+
   publish:
+    needs: resolve-version
     permissions:
       contents: write
     strategy:
@@ -41,6 +73,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Apply release version to project files
+        shell: bash
+        run: |
+          VERSION="${{ needs.resolve-version.outputs.version }}"
+          jq --arg v "$VERSION" '.version = $v' src-tauri/tauri.conf.json > tauri.conf.tmp
+          mv tauri.conf.tmp src-tauri/tauri.conf.json
+          jq --arg v "$VERSION" '.version = $v' package.json > package.tmp
+          mv package.tmp package.json
+          echo "Building Padora v$VERSION"
 
       - name: Install Linux dependencies
         if: matrix.platform == 'ubuntu-22.04'
@@ -81,7 +123,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: v__VERSION__
+          tagName: ${{ needs.resolve-version.outputs.tag }}
           releaseName: Padora v__VERSION__
           releaseBody: |
             ## Padora v__VERSION__

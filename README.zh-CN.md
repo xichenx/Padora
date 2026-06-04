@@ -120,27 +120,35 @@ pnpm tauri build
 
 ## 发布
 
-仓库已配置 GitHub Actions 工作流（`.github/workflows/release.yml`），推送版本 tag 后自动构建并上传各平台安装包。
+GitHub Actions（`.github/workflows/release.yml`）负责构建并上传安装包。**发布版本**由以下两种方式决定：
+
+| 触发方式 | 版本来源 |
+| --- | --- |
+| **推送 tag** `v0.2.0` | 从 tag 解析 → 构建 **0.2.0**，创建 Release **v0.2.0** |
+| **手动运行**（Actions → Release → Run workflow） | 在 **Release version** 输入框填写，如 `0.2.0`（不要加 `v`） |
+
+无论哪种方式，建议先在 `main` 上更新 `src-tauri/tauri.conf.json` 与 `package.json` 中的 `version` 并提交。CI 构建时也会把该版本写入产物。
 
 **首次使用前**，在 GitHub 仓库设置中开启：
 
 > **Settings → Actions → General → Workflow permissions → Read and write permissions**
 
-**发布步骤：**
+### 方式 A — 推送 tag（推荐）
 
-1. 更新 `src-tauri/tauri.conf.json` 与 `package.json` 中的 `version`
-2. 提交并推送到 `main`
-3. 创建并推送 tag：
+```bash
+# 1. 改 tauri.conf.json + package.json 版本号，提交并 push main
+git tag v0.2.0
+git push origin v0.2.0
+```
 
-   ```bash
-   git tag v0.1.0
-   git push origin v0.1.0
-   ```
+### 方式 B — 手动触发工作流
 
-4. 在 [Actions](https://github.com/xichenx/Padora/actions) 等待构建完成
-5. 在 [Releases](https://github.com/xichenx/Padora/releases) 打开草稿，确认安装包后点击 **Publish release**
+1. 打开 [Actions → Release](https://github.com/xichenx/Padora/actions/workflows/release.yml)
+2. 点击 **Run workflow**
+3. 在 **Release version** 填写版本号，如 `0.2.0`
+4. 运行
 
-也可在 Actions 页手动触发 **Release** 工作流（`workflow_dispatch`）。
+完成后在 [Releases](https://github.com/xichenx/Padora/releases) 打开草稿，确认安装包后点击 **Publish release**。
 
 ## 反馈
 
