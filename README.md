@@ -31,7 +31,20 @@ Get installers from [GitHub Releases](https://github.com/xichenx/Padora/releases
 | macOS (Intel) | `.dmg` (x86_64) |
 | Linux | `.deb` / `.AppImage` |
 
-> Early preview builds are **not code-signed**. On macOS, allow the app under **System Settings → Privacy & Security**. On Windows, SmartScreen may warn — choose **Run anyway**.
+> Early preview builds are **not code-signed**. Windows may show an "unsafe" warning — see [Installing on Windows](#installing-on-windows). On macOS, allow the app under **System Settings → Privacy & Security**.
+
+### Installing on Windows
+
+This is **expected**, not a broken build. SmartScreen blocks unsigned apps downloaded from the internet (e.g. GitHub Releases) until the publisher builds reputation or uses a code-signing certificate.
+
+**Prefer the `.msi` installer** when both `.msi` and `-setup.exe` are available.
+
+1. **Browser download** — If Edge/Chrome blocks the file, click **Keep**.
+2. **Unblock the file** — Right-click the installer → **Properties** → check **Unblock** → OK.
+3. **SmartScreen** — Double-click the installer → on the blue *"Windows protected your PC"* screen, click **More info** → **Run anyway**.
+4. **Defender false positive** — Open **Windows Security** → **Protection history** → allow or restore Padora if quarantined.
+
+For a permanent fix, see [Windows code signing](#windows-code-signing-optional) below.
 
 ## Keyboard shortcuts
 
@@ -149,6 +162,19 @@ git push origin v0.2.0
 4. Run
 
 Then open the draft on [Releases](https://github.com/xichenx/Padora/releases), verify assets, and click **Publish release**.
+
+### Windows code signing (optional)
+
+See **[docs/windows-code-signing.zh-CN.md](docs/windows-code-signing.zh-CN.md)** (Chinese, step-by-step) for the full guide.
+
+**Checklist:**
+
+1. Buy a **Code Signing** certificate; export as `.pfx`
+2. GitHub **Secrets**: `WINDOWS_CERTIFICATE` (Base64), `WINDOWS_CERTIFICATE_PASSWORD`, `WINDOWS_CERTIFICATE_THUMBPRINT`
+3. GitHub **Variable**: `ENABLE_WINDOWS_SIGNING` = `true`
+4. Push a tag or run the Release workflow
+
+The workflow imports the cert on the Windows runner and Tauri signs the `.exe` / `.msi` during `tauri build`.
 
 ## Feedback
 
