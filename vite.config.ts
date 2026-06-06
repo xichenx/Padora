@@ -9,14 +9,12 @@ export default defineConfig(async () => ({
   plugins: [react()],
 
   build: {
-    // Split heavy markdown/math/highlight libs into their own chunks.
+    // Keep a single vendor split only; finer manualChunks caused a circular
+    // katex <-> markdown dependency that breaks module loading in Tauri prod.
     rollupOptions: {
       output: {
         manualChunks: {
           react: ["react", "react-dom"],
-          katex: ["katex", "rehype-katex", "remark-math"],
-          highlight: ["highlight.js", "rehype-highlight"],
-          markdown: ["react-markdown", "remark-gfm", "rehype-raw", "rehype-slug"],
         },
       },
     },
