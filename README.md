@@ -76,14 +76,24 @@ For a permanent fix, see [Windows code signing](#windows-code-signing-optional) 
 
 ```
 Padora/
-├── src/                 # React frontend
-│   ├── App.tsx          # Main UI and logic
-│   ├── App.css          # Styles and themes
-│   └── i18n.ts          # UI strings (zh / en)
-├── src-tauri/           # Tauri / Rust backend
-│   ├── src/lib.rs       # Commands and native menu
-│   └── tauri.conf.json  # App configuration
-└── .github/workflows/   # CI / release pipelines
+├── src/                      # React frontend
+│   ├── App.tsx               # Root orchestrator (wires hooks + components)
+│   ├── App.css               # Styles and themes
+│   ├── i18n.ts               # UI strings (zh / en)
+│   ├── types/                # Shared TypeScript types
+│   ├── lib/                  # Pure utilities (paths, prefs, constants)
+│   ├── services/             # Tauri API wrappers
+│   ├── hooks/                # Domain logic (document, find, search, …)
+│   └── components/           # UI components (Toolbar, Sidebar, Editor, …)
+├── src-tauri/                # Tauri / Rust backend
+│   ├── src/
+│   │   ├── lib.rs            # App entry & command registration
+│   │   ├── commands/         # Tauri commands (file, image, search)
+│   │   ├── menu.rs           # Native menu builder
+│   │   ├── models.rs         # Shared structs
+│   │   └── fs_util.rs        # Filesystem helpers
+│   └── tauri.conf.json       # App configuration
+└── .github/workflows/        # CI / release pipelines
 ```
 
 ## Development
