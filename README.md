@@ -2,7 +2,11 @@
 
 A lightweight, **Typora**-inspired Markdown reader and editor for Windows, macOS, and Linux. Built with **Tauri 2 + React + Rust** — local-first, no cloud account required.
 
-**Read in other languages:** [中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md)
+<!-- README-I18N:START -->
+
+**English** | [中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md)
+
+<!-- README-I18N:END -->
 
 [Features](#features) · [Download](#download) · [Development](#development) · [Release](#release)
 
